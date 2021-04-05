@@ -1,0 +1,37 @@
+config:
+  phases:
+  - {arrivalRate: 1, duration: 10}
+  - {pause: 5}
+  - {arrivalRate: 0, duration: 30, rampTo: 10}
+  processor: ./example.js
+  target: http://localhost:5000
+scenarios:
+- flow:
+  - {function: setupRandomUser}
+  - post:
+      capture:
+      - {as: token, json: $.access_token}
+      - {as: user_id, json: $.id}    
+      json: {password: '{{ password }}', username: '{{ username }}'}
+      url: /login
+  - get:
+      headers: {Authorization: 'Bearer {{ token }}'}
+      url: /user/{{ user_id }}
+  name: normal login
+  weight: 4
+- flow:
+  - {function: setupRandomUser}
+  - post:
+      capture:
+      - {as: token, json: $.access_token}
+      - {as: user_id, json: $.id}    
+      json: {password: '{{ password }}_', username: '{{ username }}'}
+      url: /login
+  - post:
+      capture:
+      - {as: token, json: $.access_token}
+      - {as: user_id, json: $.id}    
+      json: {password: '{{ password }}__', username: '{{ username }}'}
+      url: /login
+  name: failed login
+  weight: 1

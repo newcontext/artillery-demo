@@ -1,0 +1,9 @@
+config:
+  phases:
+  - {arrivalRate: 1, duration: 3}
+  target: http://localhost:5000
+scenarios:
+- flow:
+  - post:
+      json: {password: '6IOlEvt02Zp', username: 'nceschelli0'}
+      url: /login

@@ -1,0 +1,15 @@
+config:
+  phases:
+  - {arrivalRate: 1, duration: 3}
+  target: http://localhost:5000
+scenarios:
+- flow:
+  - post:
+      capture:
+      - {as: token, json: $.access_token}
+      - {as: user_id, json: $.id}    
+      json: {password: '6IOlEvt02Zp', username: 'nceschelli0'}
+      url: /login
+  - get:
+      headers: {Authorization: 'Bearer {{ token }}'}
+      url: /user/{{ user_id }}

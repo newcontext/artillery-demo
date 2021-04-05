@@ -1,0 +1,17 @@
+config:
+  phases:
+  - {arrivalRate: 1, duration: 3}
+  processor: ./example.js
+  target: http://localhost:5000
+scenarios:
+- flow:
+  - {function: setupRandomUser}
+  - post:
+      capture:
+      - {as: token, json: $.access_token}
+      - {as: user_id, json: $.id}    
+      json: {password: '{{ password }}', username: '{{ username }}'}
+      url: /login
+  - get:
+      headers: {Authorization: 'Bearer {{ token }}'}
+      url: /user/{{ user_id }}
